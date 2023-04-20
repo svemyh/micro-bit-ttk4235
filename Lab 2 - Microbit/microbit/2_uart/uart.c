@@ -21,24 +21,24 @@ void uart_init(){
 		//^ DIRCLR: Write: a '1' sets pin to input; a '0' has no effect
 
 	//GPIO0->PIN_CNF[6] = 0; // redundant?
-	GPIO0->PIN_CNF[6] = (0 << 0)     // Input buffer connected
-                        | (1 << 1)   // Pull-up resistor enabled
-                        | (3 << 8);  // Pin assigned to UART function
+	//GPIO0->PIN_CNF[6] = (0 << 0)     // Input buffer connected
+    //                    | (1 << 1)   // Pull-up resistor enabled
+    //                    | (3 << 8);  // Pin assigned to UART function
 
 	// TX at P1.08 shall be output
 	//GPIO1->DIRSET = (1 << 8); // set as output
 	//^ DIRSET: Write: a '1' sets pin to output; a '0' has no effect
 
 	//GPIO1->PIN_CNF[8] = 1; // redundant?
-	GPIO1->PIN_CNF[8] = (3 << 0)     // Output buffer connected
-					| (0 << 2)   // Standard drive strength
-					| (0 << 3)   // No pull resistor
-					| (3 << 8);  // Pin assigned to UART function
+	//GPIO1->PIN_CNF[8] = (3 << 0)     // Output buffer connected
+	//				| (0 << 2)   // Standard drive strength
+	//				| (0 << 3)   // No pull resistor
+	//				| (3 << 8);  // Pin assigned to UART function
 
 
 	// PIN_CNF: Input = 0; Output = 1;
-	//GPIO0->PIN_CNF[6] = 0; //RX
-	//GPIO1->PIN_CNF[8] = 1; //TX
+	GPIO0->PIN_CNF[6] = 0; //RX
+	GPIO1->PIN_CNF[8] = 1; //TX
 
 
 
