@@ -2,6 +2,13 @@
 #include "gpio.h"
 #include "uart.h"
 #include <stdio.h>
+#include <newlib.h>
+
+
+// sudo minicom -D /dev/ttyACM0
+
+
+
 
 const int BUTTON_A_PIN = 14;
 const int BUTTON_B_PIN = 23;
@@ -65,12 +72,12 @@ int main(){
 	iprintf("The average grade in TTK%d was in %d and %d: %c\n\r", 4235, 2019, 2018, 'C');
 	
 	int sleep;
-	int led_state = 0;
 	while(1){
 
 		if (button_press_a()){
 			uart_send('A');
 			burst_flash();
+			iprintf("Yippee Ki-Yay");
 		}
 
 		if (button_press_b()){
@@ -78,9 +85,12 @@ int main(){
 			burst_flash();
 		}
 
-		if (uart_read() != '\0'){
-			led_state = toggle_LEDs(led_state); // checked that works.
-		}
+		char received_char = uart_read();
+		if (received_char != 0){
+    		// Process the received character, e.g., print it
+    		iprintf("Received character: %c\n", received_char);
+    		burst_flash();
+		}	
 	
 
 		sleep = 100;

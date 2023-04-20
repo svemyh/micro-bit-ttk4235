@@ -27,6 +27,10 @@ CFLAGS += -DNRF52833_XXAA
 CFLAGS += --specs=nosys.specs -Wl,--gc-sections -T $(LINKER_SCRIPT)
 # or --specs=nano.specs -lc -lnosys
 
+CFLAGS += -I /home/svein/Downloads/DeviceDownload/nRF5_SDK_17.1.0_ddde560/modules/nrfx/mdk/ -I /home/svein/Downloads/DeviceDownload/nRF5_SDK_17.1.0_ddde560/components/toolchain/cmsis/include # added to make use of nrf.h
+CFLAGS += -g # easier debugging
+
+
 SOURCES += $(BUILD_DIR)/system_nrf52833.c
 SOURCES += $(BUILD_DIR)/gcc_startup_nrf52833.S
 

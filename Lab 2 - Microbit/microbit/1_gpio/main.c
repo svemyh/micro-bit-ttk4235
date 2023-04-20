@@ -287,9 +287,7 @@ int main(){
 	GPIO0->PIN_CNF[30] = 1; //Col 5 
 
 	init_matrix(); // Setting rows and cloumns as output.
-
 	
-
 	gpio_init();
 	
 	// Configure buttons (dere må sjekke selv hvilken GPIO modul de ulike knappene tilhører)
