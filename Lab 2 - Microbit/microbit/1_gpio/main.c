@@ -25,7 +25,7 @@ typedef struct {
 	volatile uint32_t DIRCLR;
 	volatile uint32_t LATCH;
 	volatile uint32_t DETECTMODE; // 0x524
-	volatile uint32_t RESERVED1_0[119]; 
+	volatile uint32_t RESERVED1_0[118]; // lol, this should not be 119.
 	// 0x700 = 1792
 	// 0x524 = 1316
 	// 1792 - 1316 = 476; 476/4 = 119; 
@@ -43,7 +43,7 @@ typedef struct {
 	volatile uint32_t DIRCLR;
 	volatile uint32_t LATCH;
 	volatile uint32_t DETECTMODE;
-	volatile uint32_t RESERVED1_1[119];
+	volatile uint32_t RESERVED1_1[118];
 	volatile uint32_t PIN_CNF[10];
 } NRF_GPIO_REGS1;
 
@@ -287,6 +287,9 @@ int main(){
 	GPIO0->PIN_CNF[30] = 1; //Col 5 
 
 	init_matrix(); // Setting rows and cloumns as output.
+
+	
+
 	gpio_init();
 	
 	// Configure buttons (dere må sjekke selv hvilken GPIO modul de ulike knappene tilhører)
@@ -296,28 +299,12 @@ int main(){
 	GPIO0->PIN_CNF[BUTTON_A_PIN] = 0; // button A, configure as input
 	GPIO0->PIN_CNF[BUTTON_B_PIN] = 0; // button B
 	
-	int sleep = 0;
+	
 
 	init_buttons();
 
-
-
-	enable_matrix();
-	sleep = 500000;
-	while(--sleep);
-	disable_matrix2();
-	sleep = 500000;
-	while(--sleep);
-	enable_matrix();
-	sleep = 500000;
-	while(--sleep);
-	disable_matrix2();
-	sleep = 500000;
-	while(--sleep);
-
-
+	int sleep = 0;
 	int state = 0;
-
 	while(1){
 		
 		/* Check if button B is pressed;
@@ -326,26 +313,29 @@ int main(){
 		/* Check if button A is pressed;
 		 * turn off LED matrix if it is. */
 
-
-
-
-		//main_loopV1(); 	// Denne er det egentlige forsøket men klarer umulig å forstå kvifor pin A leser konstant høg. 
-
-		state = main_loopV2(state); // Ish samme funksjonalitet men at B er ein toggle button for led-matrisa.
-
-	/*
-		if (button_press_a()){
-			gpio_lights_off();
+		if (button_press_b())
+		{
+			state=1;
 		}
-
-		if (button_press_b()){
-			gpio_lights_on();
+		if (button_press_a())
+		{
+			state=0;
 		}
 		
-	*/
+		if (state==1)
+		{
+			gpio_lights_on();
+		} else {
+			gpio_lights_off();
+		}
+		
+		
 
-		sleep = 1000;
+
+		sleep = 100;
 		while(--sleep);
 	}
 	return 0;
 }
+
+
