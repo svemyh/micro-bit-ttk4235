@@ -1,9 +1,13 @@
-# include <stdint.h>
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
 
 void uart_init();
 void uart_send(char letter);
 char uart_read();
-void uart_send_str(char ** str);
+//void uart_send_str(char ** str);
+void uart_send_str(const char *str);
+ssize_t _write(int fd, const void *buf, size_t count);
 
 
 #define UART ((NRF_UART_REG*) 0x40002000)

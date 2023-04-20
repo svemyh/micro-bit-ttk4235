@@ -1,5 +1,10 @@
 #include "gpio.h"
 #include "uart.h"
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
+
+//#include ".build_system/nrf.h"
 
 /*
 
@@ -41,7 +46,18 @@ void uart_init(){
 	GPIO1->PIN_CNF[8] = 1; //TX
 
 
+	GPIO0->PIN_CNF[6] = (0 << 0) | // GPIO_PIN_CNF_DIR_Input
+                        (0 << 1) | // GPIO_PIN_CNF_INPUT_Connect
+                        (3 << 2) | // GPIO_PIN_CNF_PULL_Pullup
+                        (0 << 8) | // GPIO_PIN_CNF_DRIVE_S0S1
+                        (0 <<16);   // GPIO_PIN_CNF_SENSE_Disabled;
 
+    GPIO1->PIN_CNF[8] = (1 << 0) | // GPIO_PIN_CNF_DIR_Output
+                        (1 << 1) | // GPIO_PIN_CNF_INPUT_Disconnect
+                        (0 << 2) | // GPIO_PIN_CNF_PULL_Disabled
+                        (0 << 8) | // GPIO_PIN_CNF_DRIVE_S0S1
+                        (0 <<16);  // GPIO_PIN_CNF_SENSE_Disabled;
+	
 
 	UART->BAUDRATE = 0x00275000; // set baudrate to 9600
 
@@ -52,6 +68,9 @@ void uart_init(){
 
 	UART->PSELRXD = 0x06; // Connect P0.06 as RXD; (0b00000 || 0x06) = 0 + 6 = 6 = 0x06
 	UART->PSELTXD = (1 << 5) | 0x08; // Connect P1.08 as TXD; (0b10000 || 0x08) = 32 + 8 = 40 = 0x28
+
+	UART->EVENTS_TXDRDY = 0;
+	UART->EVENTS_RXDRDY = 0;
 
 	UART->ENABLE = 4;
   	//UART->TASKS_STARTTX = 1; // Trigger
@@ -80,7 +99,7 @@ char uart_read(){
 }
 
 
-
+/*
 void uart_send_str(char ** str){
 	UART->TASKS_STARTTX = 1;
 	char * letter_ptr = *str;
@@ -90,4 +109,26 @@ void uart_send_str(char ** str){
 		UART->EVENTS_TXDRDY = 0;
 		letter_ptr++;
 	}
+}
+*/
+void uart_send_str(const char *str){
+    UART->TASKS_STARTTX = 1;
+    const char *letter_ptr = str;
+    while(*letter_ptr != '\0'){
+        UART->TXD = *letter_ptr;
+        while(!UART->EVENTS_TXDRDY);
+        UART->EVENTS_TXDRDY = 0;
+        letter_ptr++;
+    }
+}
+
+
+
+ssize_t _write(int fd, const void *buf, size_t count){
+	char * letter = (char *)(buf);
+	for(int i = 0; i < count; i++){
+		uart_send(*letter);
+		letter++;
+	}
+	return count;
 }

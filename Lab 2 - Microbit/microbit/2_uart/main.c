@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "uart.h"
 #include <stdio.h>
+#include ".build_system/nrf.h"
 //#include <newlib.h>
 
 
@@ -57,14 +58,6 @@ int toggle_LEDs(int led_state){
 }
 
 
-ssize_t _write(int fd, const void *buf, size_t count){
-	char * letter = (char *)(buf);
-	for(int i = 0; i < count; i++){
-		uart_send(*letter);
-		letter++;
-	}
-	return count;
-}
 
 
 int main(){
