@@ -2,10 +2,13 @@
 #include "gpio.h"
 #include "uart.h"
 #include <stdio.h>
-#include <newlib.h>
+//#include <newlib.h>
 
 
 // sudo minicom -D /dev/ttyACM0
+// sudo dmesg --follow
+// sudo picocom -b 9600 --flow h /dev/ttyACM0
+// picocom -b 9600 /dev/ttyACM0
 
 
 
@@ -90,10 +93,10 @@ int main(){
     		// Process the received character, e.g., print it
     		iprintf("Received character: %c\n", received_char);
     		burst_flash();
-		}	
+		}
 	
 
-		sleep = 100;
+		sleep = 10000;
 		while(--sleep);
 	}
 	return 0;

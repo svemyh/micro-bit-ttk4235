@@ -7,27 +7,41 @@ Target MCU -> nRF52833-QIAA
 Interface MCU -> nRF52820-QDAA-R
 
 UART_INT_RX - Interface MCU, 31 -> P0.08
-			- Target MCU, L1 -> P0.06
+			- Target MCU, L1 -> P0.06 // input
 
 UART_INT_TX - Interface MCU, 32 -> P0.29
-			- Target MCU, P2 -> P1.08
+			- Target MCU, P2 -> P1.08 // output
 
 Want to configure P0.06 as input and P1.08 as output.
 	
 */
 void uart_init(){
-	GPIO0->DIRCLR = (1 << 6); // set as input
-	//GPIO0->PIN_CNF[6] = 0; // redundant?
-	//GPIO0->PIN_CNF[6] = (0 << 0)     // Input buffer connected
-    //                    | (1 << 1)   // Pull-up resistor enabled
-    //                    | (3 << 8);  // Pin assigned to UART function
+	// RX at P0.06 shall be input
+	//GPIO0->DIRCLR = (1 << 6); // set as input
+		//^ DIRCLR: Write: a '1' sets pin to input; a '0' has no effect
 
-	GPIO1->DIRSET = (1 << 8); // set as output
+	//GPIO0->PIN_CNF[6] = 0; // redundant?
+	GPIO0->PIN_CNF[6] = (0 << 0)     // Input buffer connected
+                        | (1 << 1)   // Pull-up resistor enabled
+                        | (3 << 8);  // Pin assigned to UART function
+
+	// TX at P1.08 shall be output
+	//GPIO1->DIRSET = (1 << 8); // set as output
+	//^ DIRSET: Write: a '1' sets pin to output; a '0' has no effect
+
 	//GPIO1->PIN_CNF[8] = 1; // redundant?
-	//GPIO1->PIN_CNF[8] = (3 << 0)     // Output buffer connected
-	//				| (0 << 2)   // Standard drive strength
-	//				| (0 << 3)   // No pull resistor
-	//				| (3 << 8);  // Pin assigned to UART function
+	GPIO1->PIN_CNF[8] = (3 << 0)     // Output buffer connected
+					| (0 << 2)   // Standard drive strength
+					| (0 << 3)   // No pull resistor
+					| (3 << 8);  // Pin assigned to UART function
+
+
+	// PIN_CNF: Input = 0; Output = 1;
+	//GPIO0->PIN_CNF[6] = 0; //RX
+	//GPIO1->PIN_CNF[8] = 1; //TX
+
+
+
 
 	UART->BAUDRATE = 0x00275000; // set baudrate to 9600
 
@@ -40,7 +54,7 @@ void uart_init(){
 	UART->PSELTXD = (1 << 5) | 0x08; // Connect P1.08 as TXD; (0b10000 || 0x08) = 32 + 8 = 40 = 0x28
 
 	UART->ENABLE = 4;
-  	UART->TASKS_STARTTX = 1; // Trigger
+  	//UART->TASKS_STARTTX = 1; // Trigger
 	UART->TASKS_STARTRX = 1; // Start receiver
 }
 
@@ -66,3 +80,14 @@ char uart_read(){
 }
 
 
+
+void uart_send_str(char ** str){
+	UART->TASKS_STARTTX = 1;
+	char * letter_ptr = *str;
+	while(*letter_ptr != '\0'){
+		UART->TXD = *letter_ptr;
+		while(!UART->EVENTS_TXDRDY);
+		UART->EVENTS_TXDRDY = 0;
+		letter_ptr++;
+	}
+}
