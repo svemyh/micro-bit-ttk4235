@@ -232,21 +232,21 @@ void gpio_lights_off(){
 
 
 void main_loopV1(){
-		int sleep = 0;
-		enable_matrix();
-		if (!(GPIO0->IN & (1 << BUTTON_B_PIN))){ // sann når eg trykker
-			
-			disable_matrix2();
-			sleep = 10000000;
-			while(--sleep);
-		}
+	int sleep = 0;
+	enable_matrix();
+	if (!(GPIO0->IN & (1 << BUTTON_B_PIN))){ // sann når eg trykker
+		
+		disable_matrix2();
+		sleep = 10000000;
+		while(--sleep);
+	}
 
-		if (!(GPIO0->IN & (1 << BUTTON_A_PIN))){ // sann når eg trykker
-			
-			//disable_matrix2();
-			sleep = 100;
-			while(--sleep);
-		}
+	if (!(GPIO0->IN & (1 << BUTTON_A_PIN))){ // sann når eg trykker
+		
+		//disable_matrix2();
+		sleep = 100;
+		while(--sleep);
+	}
 }
 
 

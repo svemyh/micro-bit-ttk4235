@@ -41,5 +41,7 @@ typedef struct {
   volatile uint32_t RESERVED10;
   volatile uint32_t BAUDRATE; // 0x524 (BAUDRATE) = 1316; 0x56C (CONFIG) = 1388; 1388-1316 = 72; 72 / 4 = 18 = 1 + 17.
   volatile uint32_t RESERVED11[17];
-  volatile uint32_t CONFIG;
-} NRF_UART_REG;
+
+  // hex(4 * (1+1+1+1+3+1+56+1+1+1+4+1+1+1+7+1+46+1+64+1+1+93+1+31+1+1+1+1+1+1+1+1+1+1+17))=hex(1388)=0x56C
+  volatile uint32_t CONFIG; // 0x56C
+} NRF_UART_REG; // 6.31 UART — Universal asynchronous receiver/transmitter.
