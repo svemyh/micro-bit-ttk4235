@@ -66,8 +66,15 @@ void uart_init(){
 	//UART->PSELCTS = 2147483648; // Disconecting CTS
 	UART->PSELCTS = 0xFFFFFFFF; 
 
-	UART->PSELRXD = 0x06; // Connect P0.06 as RXD; (0b00000 || 0x06) = 0 + 6 = 6 = 0x06
-	UART->PSELTXD = (1 << 5) | 0x08; // Connect P1.08 as TXD; (0b10000 || 0x08) = 32 + 8 = 40 = 0x28
+	//UART->PSELRXD = 0x06; // Connect P0.06 as RXD; (0b00000 || 0x06) = 0 + 6 = 6 = 0x06
+	//UART->PSELTXD = (1 << 5) | 0x08; // Connect P1.08 as TXD; (0b10000 || 0x08) = 32 + 8 = 40 = 0x28
+
+	// Switch these two:
+	UART->PSELTXD = 0x06; // Connect P0.06 as RXD; (0b00000 || 0x06) = 0 + 6 = 6 = 0x06
+	UART->PSELRXD = (1 << 5) | 0x08; // Connect P1.08 as TXD; (0b10000 || 0x08) = 32 + 8 = 40 = 0x28
+
+
+	
 
 	UART->EVENTS_TXDRDY = 0;
 	UART->EVENTS_RXDRDY = 0;
